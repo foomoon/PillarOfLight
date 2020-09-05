@@ -1,6 +1,5 @@
 # PillarOfLight
 
-## Install
 Pillar of Light app should be installed to a web-enabled arduino-compatible device such as an ESP8266.  This code is configured to install on a NodeMCU development board with embedded ESP8226.
 
 First install should be via a USB-to-Serial connection similar to any arduino board.  Consequent software updates can be executed Over-the-Air (OTA) via a local wifi network connection.  
