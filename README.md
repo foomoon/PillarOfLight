@@ -32,7 +32,9 @@ There are 3 pins on a WS2812 led strip
 3) Signal
 
 Ground -> ESP8266 ground and power source ground
+
 Power -> power source positive
+
 Signal -> Pin D1 on ESP8266 (This can be changed in sofware if another pin is needed)
 
 
