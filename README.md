@@ -12,12 +12,13 @@ This project can probably be configured within the Arduino IDE, however it was c
 
 ### Software Setup
 1) Connect board to your computer via USB 
-2) On separate device, connect to newly initiated network called: AutoConnectAP
-3) In a browser, navigate to 192.168.4.1
-4) Enter your local wifi credentials (username/password) and save
-5) Reconnect to your local wifi (the one you just entered the credentials)
-6) In a browser, navigate to pillaroflight.local
-7) Done!
+2) Upload project for first time
+3) On separate device, connect to newly initiated network called: AutoConnectAP
+4) In a browser, navigate to 192.168.4.1
+5) Enter your local wifi credentials (username/password) and save
+6) Reconnect to your local wifi (the one you just entered the credentials)
+7) In a browser, navigate to pillaroflight.local
+8) Done!
 
 ### OTA
 If the above configuration was done correctly, then future software updates via OTA should work fine when the board is unplugged from USB-to-Serial connection.
