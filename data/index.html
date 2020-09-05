@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LED Control</title>
+    <link href='main.css' rel='stylesheet' type='text/css'>
+    <link href='https://cdn.jsdelivr.net/gh/artf/grapick@0.1.7/dist/grapick.min.css' rel='stylesheet' type='text/css'>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="144x144"  href="/favicon-144x144.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#00878f">
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'>
+    <script src="WebSocket.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/jaames/iro.js@master/dist/iro.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/artf/grapick@0.1.7/dist/grapick.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/bgrins/TinyColor@1.4.1/dist/tinycolor-min.js"></script>
+    <!-- Need to pull in this code -->
+    <!-- https://jsfiddle.net/zuwc3ody/11/ -->
+    <style type='text/css'>
+
+        .grapick-cont {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+            margin: -15px;
+            margin-bottom: 10px;
+            padding: 25px 15px;
+            width: 80%;
+            /* height: 50px; */
+            /* background: white; */
+        }
+        .grp-preview {
+            border: 2px solid white;
+            border-radius: 3px;
+        }
+
+
+    </style>
+</head>
+
+<body>
+
+    <center>
+        <header>
+            <h1>Pillar of Fire Control</h1>
+        </header>
+        <div>
+
+            <div class="grapick-cont">
+                <div id="grapick"></div>
+            </div>
+            
+            <div class="colorPicker"></div>
+            <div>
+                <table>
+                    <tr> 
+                        <td style="width:24px; text-align: right">Brightness: </td>
+                        <td><input class="enabled" id="brightness" type="range" min="0" max="128" step="1" oninput="sendBrightness();" value="32"></td>
+                    </tr>
+                    <tr>
+                        <td style="width:24px; text-align: right">Speed: </td>
+                        <td><input class="enabled" id="speed" type="range" min="10" max="35" step="1" oninput="sendSpeed();" value="20"></td>
+                    </tr>
+                    <tr>
+                        <td style="width:24px; text-align: right">Spark: </td>
+                        <td><input class="enabled" id="spark" type="range" min="50" max="200" step="1" oninput="sendSpark();" value="50"></td>
+                    </tr>
+                    <tr>
+                        <td style="width:24px; text-align: right">Cool: </td>
+                        <td><input class="enabled" id="cooling" type="range" min="20" max="100" step="1" oninput="sendCool();" value="50"></td>
+                    </tr>
+                </table>
+            </div>
+    
+            <p style="margin:8px 0px">
+                <a class="button" href="/edit.html">Upload</a>
+                <a class="button" href="#" onclick="saveData()">Save</a>  
+                <!-- <form style="display:inline-block" action="/" method="post" enctype="text/plain">
+                    <button class="button" type="submit">Save</button>
+                    <input style="display:none" id="dataField" type="text" name="description" value="">
+                </form>            -->
+            </p>
+        </div>
+    </center>
+
+
+    <script>
+
+        // // https://iro.js.org/guide.html#getting-started
+        // var colorPicker = new iro.ColorPicker(".colorPicker", {
+        //     width: 280,
+        //     color: "rgb(255, 0, 0)",
+        //     borderWidth: 1,
+        //     borderColor: "#fff",
+        // });
+
+        // var values = document.getElementById("values");
+
+        // // https://iro.js.org/guide.html#color-picker-events
+        // colorPicker.on(["color:init", "color:change"], function(color){
+            
+        //     data.color = color.hexString;
+        //     data.hsv = color.hsv;
+
+        //     sendDataAsJSON();
+
+        // });
+
+        var data;
+
+        request({url: "gradient.json"})
+        .then(result => {
+
+            data = JSON.parse(result);
+
+            // $("dataField").value=(JSON.stringify(data," ",4));
+            
+            const gp = new Grapick({
+                el: '#grapick'
+            });
+
+            if (typeof(data) != "undefined") {
+                setBrightness();
+                setSpeed();
+                setCool();
+                setSpark();
+                data.gradient.colors.forEach(element => {
+                    console.log(element);
+                    var rgbString = tinycolor(element).toRgbString();
+                    var position = Number(element.pos)*100/255;
+                    gp.addHandler(position, rgbString);
+                });
+            } else { // fallback settings
+                // Handlers are color stops
+                gp.addHandler(0, 'black');
+                gp.addHandler(33, 'blue')
+                gp.addHandler(66, 'aqua');
+                gp.addHandler(100, 'white');
+            }
+
+            // Do stuff on change of the gradient
+            gp.on('change', complete => {
+                document.body.style.background = gp.getSafeValue();
+                // console.log(gp.getSafeValue());
+                data.gradient = getGradient();
+                sendDataAsJSON();
+            });
+
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+        
+
+
+
+        function getGradient() {
+
+            const typeName = name => `${name}-gradient(`;
+
+            let value = document.body.style.background;
+            let start = value.indexOf('(') + 1;
+            let end = value.lastIndexOf(')');
+            let gradients = value.substring(start, end);
+            const values = gradients.split(/,(?![^(]*\)) /);
+
+            var result = {
+                type: '',
+                direction: '',
+                colors: [],
+            };
+
+            if (values.length > 2) {
+                result.direction = values.shift();
+            }
+
+            let typeFound;
+            const types = ['repeating-linear', 'repeating-radial', 'linear', 'radial'];
+            types.forEach(name => {
+                if (value.indexOf(typeName(name)) > -1 && !typeFound) {
+                    typeFound = 1;
+                    result.type = name;
+                }
+            })
+
+            values.forEach(value => {
+                const hdlValues = value.split(' ');
+                const position = Math.round(2.55 * parseFloat(hdlValues.pop()));
+                const color = hdlValues.join('');
+                var c = tinycolor(color);
+                result.colors.push({
+                    pos: position,
+                    r: c._r,
+                    g: c._g,
+                    b: c._b
+                });
+            });
+
+            // make sure first and last values are 0 and 255, accordingly
+            result.colors[0].pos = 0;
+            result.colors[result.colors.length-1].pos = 255;
+
+            return result;
+        }
+
+        // avoiding Jquery here, but maybe we don't need to
+        function loadJSON(callback) {   
+            var xobj = new XMLHttpRequest();
+                xobj.overrideMimeType("application/json");
+                xobj.open('GET', 'gradient.json', true); 
+                xobj.onreadystatechange = function () {
+                if (xobj.readyState == 4 && xobj.status == "200") {
+                    // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+                    callback(xobj.responseText);
+                }
+            };
+            xobj.send(null);  
+        }
+
+        function fetchData() {
+            var actual_JSON;
+            loadJSON(function(response) {
+            // Parse JSON string into object
+                actual_JSON = JSON.parse(response);
+                console.log(actual_JSON);
+            });
+            return actual_JSON;
+        }
+
+        
+
+        
+
+        function saveData() {
+            // TODO:  Need to post JSON sdata to server and save it
+            var http = new XMLHttpRequest();
+            http.open("POST", "/", true);
+            http.setRequestHeader("Content-type","text/plain");
+            var params = "description=" + JSON.stringify(data," ",4); // probably use document.getElementById(...).value
+            http.send(params);
+            http.onload = function() {
+                alert(http.responseText);
+            }
+        }
+</script>
+</body>
+</html>
