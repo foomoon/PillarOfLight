@@ -1,0 +1,117 @@
+{
+    "size": 50,
+    "selected": "fire",
+    "effects": {
+        "fire": {
+            "name": "fire",
+            "data": {
+                "gradient": {
+                    "type": "gradient",
+                    "value": [
+                        {
+                            "pos": 0,
+                            "r": 0,
+                            "g": 0,
+                            "b": 0
+                        },
+                        {
+                            "pos": 84,
+                            "r": 0,
+                            "g": 0,
+                            "b": 255
+                        },
+                        {
+                            "pos": 173,
+                            "r": 0,
+                            "g": 255,
+                            "b": 255
+                        },
+                        {
+                            "pos": 255,
+                            "r": 255,
+                            "g": 255,
+                            "b": 255
+                        }
+                    ],
+                    "mapto": "PALETTE"
+                },
+                "brightness": {
+                    "type": "range",
+                    "class": "enabled",
+                    "min": 0,
+                    "max": 255,
+                    "step": 1,
+                    "id": "brightness-slider",
+                    "name": "brightness",
+                    "value": 65
+                },
+                "speed": {
+                    "type": "range",
+                    "class": "enabled",
+                    "min": 10,
+                    "max": 60,
+                    "step": 1,
+                    "mapto": "FRAMES_PER_SECOND",
+                    "id": "speed-slider",
+                    "name": "speed",
+                    "value": 60
+                },
+                "intensity": {
+                    "type": "range",
+                    "class": "enabled",
+                    "min": 50,
+                    "max": 200,
+                    "step": 1,
+                    "mapto": "SPARKING",
+                    "id": "intensity-slider",
+                    "name": "intensity",
+                    "value": 80
+                },
+                "size": {
+                    "type": "range",
+                    "class": "enabled",
+                    "min": 20,
+                    "max": 100,
+                    "step": 1,
+                    "mapto": "COOLING",
+                    "reverse": true,
+                    "id": "size-slider",
+                    "name": "size",
+                    "value": 50
+                }
+            }
+        },
+        "scanner": {
+            "name": "scanner",
+            "data": {
+                "color": {
+                    "type": "color",
+                    "class": "colorpick",
+                    "value": [
+                        0,
+                        0,
+                        255
+                    ]
+                },
+                "speed": {
+                    "type": "range",
+                    "class": "enabled",
+                    "value": 2,
+                    "min": 1,
+                    "max": 10,
+                    "step": 1,
+                    "reverse": true
+                },
+                "spread": {
+                    "type": "range",
+                    "class": "enabled",
+                    "value": 12,
+                    "min": 1,
+                    "max": 20,
+                    "step": 1
+                }
+            }
+        }
+    },
+    "timestamp": "Sun Sep 06 2020 23:01:58 GMT-0500 (CDT)"
+}
