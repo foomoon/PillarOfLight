@@ -1,4 +1,5 @@
 {
+    "timestamp": "2020-09-07T20:29:19.882Z",
     "size": 50,
     "selected": "fire",
     "effects": {
@@ -112,6 +113,5 @@
                 }
             }
         }
-    },
-    "timestamp": "Sun Sep 06 2020 23:01:58 GMT-0500 (CDT)"
+    }
 }

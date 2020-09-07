@@ -1,0 +1,208 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "definitions": {
+        "rgb": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+        "colorStop": {
+              "type": "object",
+              "properties": {
+                "pos": {"$ref": "definitions/rgb"},
+                "r": {"$ref": "definitions/rgb"},
+                "g": {"$ref": "definitions/rgb"},
+                "b": {"$ref": "definitions/rgb"}
+              },
+              "required": [
+                "pos",
+                "r",
+                "g",
+                "b"
+              ]
+            },
+        "gradient": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["gradient"]
+              },
+              "value": {
+                "type": "array",
+                "items":  {"$ref": "definitions/colorStop"}
+              },
+              "mapto": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "value",
+              "mapto"
+            ]
+          },
+        "range": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "class": {
+                "type": "string"
+              },
+              "min": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              },
+              "max": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              },
+              "step": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 255
+              },
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "mapto": {
+                "type": "string"
+              },
+              "reverse": {
+                "type": "boolean"
+              },
+              "value": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              }
+            },
+            "required": [
+              "type",
+              "class",
+              "value",
+              "min",
+              "max",
+              "step"
+            ]
+          },
+          "color": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "class": {
+                "type": "string"
+              },
+              "value": {
+                "type": "array",
+                "items": [
+                    {"$ref": "definitions/rgb"},
+                    {"$ref": "definitions/rgb"},
+                    {"$ref": "definitions/rgb"}
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "class",
+              "value"
+            ]
+          }
+    },
+    "properties": {
+      "timestamp": {
+        "type": "string",
+        "format":"date-time",
+        "pattern": "^(.*)$",
+        "examples": ["2019-05-03T06:25:51.238000Z"]
+      },
+      "size": {
+        "type": "integer",
+        "minimum": 10,
+        "maximum": 85
+      },
+      "selected": {
+        "type": "string",
+        "enum": ["fire","scanner"]
+      },
+      "effects": {
+        "type": "object",
+        "properties": {
+          "fire": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "data": {
+                "type": "object",
+                "properties": {
+                  "gradient": {"$ref": "definitions/gradient"},
+                  "brightness": {"$ref": "definitions/range"},
+                  "speed": {"$ref": "definitions/range"},
+                  "intensity": {"$ref": "definitions/range"},
+                  "size": {"$ref": "definitions/range"}
+                },
+                "required": [
+                  "gradient",
+                  "brightness",
+                  "speed",
+                  "intensity",
+                  "size"
+                ]
+              }
+            },
+            "required": [
+              "name",
+              "data"
+            ]
+          },
+          "scanner": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "data": {
+                "type": "object",
+                "properties": {
+                  "color": {"$ref": "definitions/color"},
+                  "speed": {"$ref": "definitions/range"},
+                  "spread": {"$ref": "definitions/range"}
+                },
+                "required": [
+                  "color",
+                  "speed",
+                  "spread"
+                ]
+              }
+            },
+            "required": [
+              "name",
+              "data"
+            ]
+          }
+        },
+        "required": [
+          "fire",
+          "scanner"
+        ]
+      }
+    },
+    "required": [
+      "timestamp",
+      "size",
+      "selected",
+      "effects"
+    ]
+  }
