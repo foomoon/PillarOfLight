@@ -10,10 +10,10 @@
         "colorStop": {
               "type": "object",
               "properties": {
-                "pos": {"$ref": "definitions/rgb"},
-                "r": {"$ref": "definitions/rgb"},
-                "g": {"$ref": "definitions/rgb"},
-                "b": {"$ref": "definitions/rgb"}
+                "pos": {"$ref": "#/definitions/rgb"},
+                "r": {"$ref": "#/definitions/rgb"},
+                "g": {"$ref": "#/definitions/rgb"},
+                "b": {"$ref": "#/definitions/rgb"}
               },
               "required": [
                 "pos",
@@ -31,7 +31,7 @@
               },
               "value": {
                 "type": "array",
-                "items":  {"$ref": "definitions/colorStop"}
+                "items":  {"$ref": "#/definitions/colorStop"}
               },
               "mapto": {
                 "type": "string"
@@ -106,9 +106,9 @@
               "value": {
                 "type": "array",
                 "items": [
-                    {"$ref": "definitions/rgb"},
-                    {"$ref": "definitions/rgb"},
-                    {"$ref": "definitions/rgb"}
+                    {"$ref": "#/definitions/rgb"},
+                    {"$ref": "#/definitions/rgb"},
+                    {"$ref": "#/definitions/rgb"}
                 ]
               }
             },
@@ -147,11 +147,11 @@
               "data": {
                 "type": "object",
                 "properties": {
-                  "gradient": {"$ref": "definitions/gradient"},
-                  "brightness": {"$ref": "definitions/range"},
-                  "speed": {"$ref": "definitions/range"},
-                  "intensity": {"$ref": "definitions/range"},
-                  "size": {"$ref": "definitions/range"}
+                  "gradient": {"$ref": "#/definitions/gradient"},
+                  "brightness": {"$ref": "#/definitions/range"},
+                  "speed": {"$ref": "#/definitions/range"},
+                  "intensity": {"$ref": "#/definitions/range"},
+                  "size": {"$ref": "#/definitions/range"}
                 },
                 "required": [
                   "gradient",
@@ -176,9 +176,9 @@
               "data": {
                 "type": "object",
                 "properties": {
-                  "color": {"$ref": "definitions/color"},
-                  "speed": {"$ref": "definitions/range"},
-                  "spread": {"$ref": "definitions/range"}
+                  "color": {"$ref": "#/definitions/color"},
+                  "speed": {"$ref": "#/definitions/range"},
+                  "spread": {"$ref": "#/definitions/range"}
                 },
                 "required": [
                   "color",
