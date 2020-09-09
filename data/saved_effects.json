@@ -94,6 +94,16 @@
                         255
                     ]
                 },
+                "brightness": {
+                    "type": "range",
+                    "class": "enabled",
+                    "min": 0,
+                    "max": 255,
+                    "step": 1,
+                    "id": "brightness-slider",
+                    "name": "brightness",
+                    "value": 65
+                },
                 "speed": {
                     "type": "range",
                     "class": "enabled",
