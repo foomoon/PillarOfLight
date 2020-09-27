@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../LEDStrip"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"__tuple": "cpp",
+			"array": "cpp"
+		}
+	}
+}

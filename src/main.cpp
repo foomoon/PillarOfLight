@@ -14,21 +14,21 @@
 
 void setup() {
   
-  startSerial();               // Start Serial interface
+  beginSerial();          // Start Serial interface
 
-  startLED();                  // Start LED
+  beginLED();             // Activate LEDs (we are going to use them to indicate following startup progress)
 
-  startWiFiManager();          // Start a Wi-Fi access point, and try to connect to some given access points. Then wait for either an AP or STA connection
+  beginWiFi();            // Start Wi-Fi access point, and try to connect to some given access points. Then wait for either an AP or STA connection
   
-  startOTA();                  // Start the OTA service
+  beginOTAupdates();      // Start Over-The-Air firware Update service
   
-  startSPIFFS();               // Start the SPIFFS and list all contents
+  beginSPIFFS();          // Start SPIFFS and list all contents
 
-  startWebSocket();            // Start a WebSocket server
+  WebSocketServer();      // Start WebSocket server
   
-  startMDNS();                 // Start the mDNS responder
+  MDNServer();            // Start mDNS responder
 
-  startServer();               // Start a HTTP server with a file read handler and an upload handler
+  HTTPServer();           // Start HTTP server with a file read handler and an upload handler
   
 }
 
@@ -36,24 +36,25 @@ void setup() {
 
 void loop() {
   
-  // if (!rainbow) { //pause all comms while we upload new firware
   webSocket.loop();                           // constantly check for websocket events
-  server.handleClient();                      // run the server
-  // }
-  
+  server.handleClient();                      // run the server  
   ArduinoOTA.handle();                        // listen for OTA events
  
+  // TODO: Build a PillarOfLight Object that wraps/handles effect rotation and updates
+  //  PillarOfLight pillar        // Setup
+  //  pillar.ledStrip(FastLED)    // Setup
+  //  pillar.setEffect(...)       // Loop
+  //  pillar.set("speed", speed)  // Loop
+  //  pillar.set(...)             // Loop
+  //  pillar.show()               // Loop : Wrap content below (will be non-blocking by nature)
 
-
-  EVERY_N_MILLISECONDS_I(timerObj,35) {
+  EVERY_N_MILLISECONDS_I(timerObj, 35) {
     timerObj.setPeriod(speed);
     FastLED.clear();
     FastLED.setBrightness(brightness);
-    // gPal = CRGBPalette16( CRGB::Black, rgbA, rgbB,  CRGB::White);
-    // gPal = CRGBPalette16( CRGB::Black, CRGB::Blue, CRGB::Aqua,  CRGB::White);
-    // loadPalette(CRGB::Black, rgbA, rgbB,  CRGB::White);
+
     if (effectName == "fire") {
-      Fire2012();
+      Fire2012(); // TODO: Need to elimanate global variables "spark" and "cooling"; make them function inputs
     } else {
       // Nothing
     }
@@ -61,25 +62,4 @@ void loop() {
     FastLED.show();
   }
 
-  
-
-  // ws2812fx.setBrightness(brightness);
-  // ws2812fx.setBrightness(brightness);
-  // ws2812fx.setColor(BLUE);
-  // ws2812fx.setSpeed(1000);
-  // ws2812fx.setMode(FX_MODE_CUSTOM);
-  // ws2812fx.setCustomMode(myCustomEffect);
-
-  // ws2812fx.service();
-
-
-  // if (textUpdate) {
-  //   LEDmessage.begin(message);
-  //   textUpdate = false;
-  // }
-
-  // LEDmessage.setTextColor(textColor);
-  // LEDmessage.setFrameTime(speed);
-  // matrix->setBrightness(brightness);
-  // LEDmessage.run();
 }

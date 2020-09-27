@@ -76,12 +76,10 @@ int updateFile(String text) {
 
 void handleUpdate() { //Handler for the body path
  
-      if (server.hasArg("plain")== false){ //Check if body received
- 
-            // server.send(200, "text/plain", "Body not received");
-            server.send(500, "text/plain", "500: could not save settings");
-            return;
- 
+      if (server.hasArg("plain") == false) { //Check if body received
+        // server.send(200, "text/plain", "Body not received");
+        server.send(500, "text/plain", "500: could not save settings");
+        return;
       }
 
       if (updateFile(server.arg("plain"))) {
@@ -102,185 +100,107 @@ void handleUpdate() { //Handler for the body path
 }
 
 
+void handleNotFound() { // if the requested file or page doesn't exist, return a 404 not found error
+  if(!handleFileRead(server.uri())){          // check if the file exists in the flash memory (SPIFFS), if so, send it
+    //TODO: Redirect to a 404.html
+    server.send(404, "text/plain", "404: File Not Found");
+  }
+}
+
 
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) { // When a WebSocket message is received
   switch (type) {
+    case WStype_FRAGMENT_BIN_START:
+      webSocket.sendTXT(num, "WStype_FRAGMENT_BIN_START");
+      break;
+    case WStype_FRAGMENT_TEXT_START:
+      webSocket.sendTXT(num, "WStype_FRAGMENT_TEXT_START");
+      break;
     case WStype_DISCONNECTED:             // if the websocket is disconnected
       Serial.printf("[%u] Disconnected!\n", num);
       break;
     case WStype_CONNECTED: {              // if a new websocket connection is established
         IPAddress ip = webSocket.remoteIP(num);
         Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
-        // rainbow = false;                  // Turn rainbow off when a new connection is established
       }
       break;
     case WStype_TEXT:                     // if new text data is received
+      
       Serial.printf("[%u] Recieved: %s\n", num, payload);
-      if (payload[0] == '#') {            // we get RGB data
-        uint32_t rgb = (uint32_t) strtol((const char *) &payload[1], NULL, 16);   // decode rgb data
-        int r = ((rgb >> 16) & 0x3FF);                     // 8 bits per color, so R: bits 16-23
-        int g = ((rgb >> 8) & 0x3FF);                     // G: bits 8-15
-        int b =          rgb & 0x3FF;                      // B: bits  0-7
+      //webSocket.sendTXT(num,  payload, length);
+      
+  
+      if (length>0) {
 
-    
-        textColor = (uint16_t) CRGB(r,g,b);
+        DynamicJsonDocument doc(1024);
+        deserializeJson(doc, (const char *) &payload[0]);
+        JsonObject effect = doc.as<JsonObject>();
 
+        if (effect.containsKey("data")) {
+          effectName = effect["name"].as<String>();
+          effect = effect["data"];
+        } 
         
-
-      // } else if (payload[0] == 'R') {                      // the browser sends an R when the rainbow effect is enabled
-      //   rainbow = true;
-      // } else if (payload[0] == 'N') {                      // the browser sends an N when the rainbow effect is disabled
-      //   rainbow = false;
-      } else {
-        
-        
-
-        if (length>0) {
-          
-
-          DynamicJsonDocument doc(1024);
-          deserializeJson(doc, (const char *) &payload[0]);
-          JsonObject obj = doc.as<JsonObject>();
-
-
-          // Parse Text String
-          if (obj.containsKey("text")) {
-            String oldMessage = message;
-            message = obj["text"].as<String>();
-            // Only update if message changed
-            if (oldMessage != message) {
-              textUpdate = true;
-            }
-          } 
-
-          JsonObject effect;
-          if (obj.containsKey("selected") && obj.containsKey("effects")) {
-            effectName = obj["selected"].as<String>(); // defaults to "fire" for backward compatability
-            effect = obj["effects"][effectName];
-          } 
-          
-          if (effect.containsKey("data")) {
-            effect = effect["data"];
-          } else {
-            effect = obj;
-          }
-
-          // Parse Color
-          if (effect.containsKey("color")) {
-            String colstr = effect["color"].as<String>();
-            colstr = colstr.substring(1);
-            // const char* colptr = colstr.c_str();
-            // message = String(colptr);
-            // uint32_t rgb = (uint32_t) strtol((const char *) &payload[1], NULL, 16);   // decode rgb data
-            uint32_t rgb = (uint32_t) strtol(colstr.c_str(), NULL, 16);   // decode rgb datas
-            int r = ((rgb >> 16) & 0xFF);                     // 8 bits per color, so R: bits 16-23
-            int g = ((rgb >> 8) & 0xFF);                     // G: bits 8-15
-            int b =          rgb & 0xFF;                      // B: bits  0-7
-
-            textColor = (uint16_t) CRGB(r,g,b);
-
-            
-          }
-
-          // Parse Brightness
-          if (effect.containsKey("brightness")) {
-            brightness = effect["brightness"]["value"].as<uint8_t>();
-          }
-
-          // Parse Speed
-          if (effect.containsKey("speed")) {
-            speed = effect["speed"]["value"].as<uint16_t>();
-          }
-
-          // Parse Intensity
-          if (effect.containsKey("intensity")) {
-            spark = effect["intensity"]["value"].as<uint16_t>();
-          }
-
-          if (effect.containsKey("spark")) { // backward compatibility
-            spark = effect["spark"].as<uint16_t>();
-          }
-
-          // Parse Cooling
-          if (effect.containsKey("size")) {
-            cooling = effect["size"]["value"].as<uint16_t>();
-          }
-          if (effect.containsKey("cooling")) { // backward compatibility
-            cooling = effect["cooling"].as<uint16_t>();
-          }
-
-          // Parse Gradient
-          if (effect.containsKey("gradient")) {
-            typedef unsigned char byte;
-            byte pal[16];
-            int n = 0;
-            JsonArray array = effect["gradient"]["colors"].as<JsonArray>();
-            if (array.size() == 4) {
-              for(JsonVariant v : array) {
-                // Serial.println(v["r"].as<int>());
-                // String result = v["r"].as<String>();
-                // webSocket.sendTXT(num, result);
-                pal[n++] = v["pos"].as<uint8_t>();
-                pal[n++] = v["r"].as<uint8_t>();
-                pal[n++] = v["g"].as<uint8_t>();
-                pal[n++] = v["b"].as<uint8_t>();
-                // String result = String(pal[n-4]);
-                // webSocket.sendTXT(num, result);
-              }
-              webSocket.sendTXT(num, "Loading Dynamic Palette");
-              gPal.loadDynamicGradientPalette(pal);
-            };
-            
-
-          }
-
-          // Parse HSV
-          // Here we have to scale Hue from 0-360 to 0-255
-          // Also, we create a second hue that is +/-60 deg out of phase 
-          if (effect.containsKey("hsv")) {
-            // webSocket.sendTXT(num, payload, length);
-            
-            
-            uint16_t h = effect["hsv"]["h"].as<uint16_t>();
-            uint8_t s = effect["hsv"]["s"].as<uint8_t>();
-            uint8_t v = effect["hsv"]["v"].as<uint8_t>();
-
-            
-
-            uint16_t h2 = (h<180) ? (h + 60) : (h - 60); // create a second hue at 60deg out of phase
-            h = map(h,0,359,0,255); // Scale from 0-360 to 0-255 for FastLED maths
-            s = map(s,0,100,0,255); // Scale from 0-360 to 0-255 for FastLED maths
-            v = map(v,0,100,0,255); // Scale from 0-360 to 0-255 for FastLED maths
-            h2 = map(h2,0,359,0,255);
-            // CRGB rgbA;
-            // CRGB rgbB;
-            CHSV hsvA = CHSV(h,s,v);
-            CHSV hsvB = CHSV(h2,s,v);
-            hsv2rgb_spectrum(hsvA,rgbA);
-            hsv2rgb_spectrum(hsvB,rgbB);
-
-            // uint16_t tmp = (uint16_t) hsvA.h;
-            // String txt = String(rgbA.r);
-            // webSocket.sendTXT(num, txt);
-            
-          }
-          
-          
-          // Serial.print("(");
-          // Serial.print(length);
-          // Serial.print(") Text being entered: ");
-          // Serial.println(message);
-          // sprintf(message,"%s",payload);
+        // Parse Brightness
+        if (effect.containsKey("brightness")) {
+          brightness = effect["brightness"]["value"].as<uint8_t>();
         }
-        
+        // Parse Speed
+        if (effect.containsKey("speed")) {
+          speed = 1000 / effect["speed"]["value"].as<uint16_t>();
+        }
+        // Parse Intensity
+        if (effect.containsKey("intensity")) {
+          spark = effect["intensity"]["value"].as<uint16_t>();
+        }
+        // Parse Cooling
+        if (effect.containsKey("size")) {
+          cooling = effect["size"]["value"].as<uint16_t>();
+        }
+
+
+        // Parse Gradient
+        if (effect.containsKey("gradient")) {
+          typedef unsigned char byte;
+          byte pal[16];
+          int n = 0;
+          JsonArray colorStopArr = effect["gradient"]["value"].as<JsonArray>();
+          // TODO: Need to check if "pal" should be resized based on size of colorStopArr
+          //       byte pal[colorStopArr.size()];
+          //       ASKING FOR A BUFFER OVERFLOW HERE!!! SHAME ON ME
+          if (colorStopArr.size() > 0) {
+            for(JsonVariant colorStop : colorStopArr) {
+              pal[n++] = colorStop["pos"].as<uint8_t>();
+              pal[n++] = colorStop["r"].as<uint8_t>();
+              pal[n++] = colorStop["g"].as<uint8_t>();
+              pal[n++] = colorStop["b"].as<uint8_t>();
+            }
+            gPal.loadDynamicGradientPalette(pal);
+          };
+        }
+
+
+         // // Parse Color
+        // if (effect.containsKey("color")) {
+        //   String colstr = effect["color"]["value"].as<String>();
+        //   colstr = colstr.substring(1);
+        //   // const char* colptr = colstr.c_str();
+        //   // message = String(colptr);
+        //   // uint32_t rgb = (uint32_t) strtol((const char *) &payload[1], NULL, 16);   // decode rgb data
+        //   uint32_t rgb = (uint32_t) strtol(colstr.c_str(), NULL, 16);   // decode rgb datas
+        //   int r = ((rgb >> 16) & 0xFF);                     // 8 bits per color, so R: bits 16-23
+        //   int g = ((rgb >> 8) & 0xFF);                     // G: bits 8-15
+        //   int b =          rgb & 0xFF;                      // B: bits  0-7
+        //
+        //   textColor = (uint16_t) CRGB(r,g,b);
+        // }
+
+
       }
+        
+      
       break;
   }
 }
 
-void handleNotFound(){ // if the requested file or page doesn't exist, return a 404 not found error
-  if(!handleFileRead(server.uri())){          // check if the file exists in the flash memory (SPIFFS), if so, send it
-    server.send(404, "text/plain", "404: File Not Found");
-  }
-}

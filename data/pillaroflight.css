@@ -1,0 +1,332 @@
+/* main.css */
+
+html,
+body {
+  min-height: 100vh;
+  margin: 0px;
+  background: white;
+  font-family: 'Roboto', sans-serif;
+  color: white;
+}
+
+body {
+  padding: 10px;
+}
+
+.app {
+  margin: 10px auto;
+  display: grid;
+  grid-template-rows: 50px auto auto;
+  grid-template-columns: minmax(200px, 1fr) auto;
+  grid-template-areas:
+    "header header"
+    "main nav"
+    "footer footer";
+
+  border-radius: 5px;
+  border: 2px solid #444;
+  background: #1f2227;
+  overflow: hidden;
+  min-width: 300px;
+  max-width: 700px;
+}
+
+.app header {
+  background-color: #0076ff;
+  color: white;
+  padding: 6px;
+  box-shadow: 1px 1px 5px #555555;
+  text-align: center;
+  overflow: hidden;
+  grid-area: header;
+}
+.app header h1 {
+  margin: 0px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 32;
+}
+.app footer {
+  grid-area: footer;
+  padding-bottom: 10px;
+}
+.app nav {
+  grid-area: nav;
+}
+.app main {
+  /* display: table; */
+  width: 100%;
+  margin: 0px auto;
+  grid-area: main;
+}
+
+
+
+
+
+.app .material-icons {
+  vertical-align: -5px;
+  margin-left: 10px;
+}
+
+.material-icons.md-18 {
+  font-size: 18px;
+  vertical-align: -4px;
+  margin-right: 5px;
+  margin-left: 0px;
+ }
+
+.app .effects span {
+  padding: 0px 0px 0px 10px;
+}
+.app .effects {
+  margin: 0px auto;
+  padding: 25px 0px 25px 25px;
+  color: white;
+}
+.app .effectSelector {
+  padding: 0px 0px 20px 0px;
+}
+
+.app .controls {
+ /*  padding: 0px 5px 0px 20px; */
+}
+
+
+
+/* Gradient Picker Style */
+
+.gradient {
+  /* margin: 5px 0px 0px 0px; */
+  padding: 15px 0px;
+}
+.grp-preview {
+  border-radius: inherit;
+  box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.5);
+  height: inherit;
+}
+.grp-wrapper {
+  background: none;
+  border: 1px solid #999999;
+  border-radius: 6px;
+  height: 20px !important;
+}
+.grp-handler-close-c {
+  visibility: hidden;
+}
+.grp-handler:hover .grp-handler-close-c {
+  visibility: visible;
+}
+
+/* Color Picker Style */
+.colorpick {
+  width: 100%;
+  margin: 5px 0px 5px 0px;
+  outline-width: 1px;
+}
+
+
+
+
+/* SLIDER */
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  width: 100%;
+  margin: 6px 0px;
+  background: #0076ff;
+  background-image: linear-gradient(to right, #e6e6e6, #0076ff);
+  border-radius: 6px;
+  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 24px;
+  width: 40px;
+  margin-top: -3px;
+  border-radius: 6px;
+}
+input.disabled[type=range]::-webkit-slider-thumb {
+  background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.3));
+}
+input.enabled[type=range]::-webkit-slider-thumb {
+  background: white;
+  color: #0076ff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.3));
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  border-radius: 7px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: inherit;
+  height: 18px;
+  border-radius: 6px;
+}
+input.enabled[type=range]::-webkit-slider-runnable-track {
+  cursor: pointer;
+}
+
+
+.select-css {
+  display: block;
+  font-size: 16px;
+  font-family: sans-serif;
+  font-weight: 700;
+  color: #444;
+  line-height: 1;
+  padding: 0.4em 1.4em 0.4em 0.8em;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 5px 0px 0px 0px;
+  border: 1px solid #aaa;
+  box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+  border-radius: 0.5em;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  background-image:
+  url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
+    linear-gradient(to bottom, #ffffff 0%, #e5e5e5 100%);
+  background-repeat: no-repeat, repeat;
+  background-position: right 0.7em top 50%, 0 0;
+  background-size: 0.65em auto, 100%;
+}
+.select-css::-ms-expand {
+  display: none;
+}
+.select-css:hover {
+  border-color: #ccc;
+}
+.select-css:focus {
+  border-color: #aaa;
+  box-shadow: 0 0 1px 3px rgba(59, 153, 252, 0.7);
+  box-shadow: 0 0 0 3px -moz-mac-focusring;
+  color: #222;
+  outline: none;
+}
+.select-css option {
+  font-weight: normal;
+}
+
+
+
+
+.app .center {
+  display: flex;
+  justify-content: center;
+}
+
+.O {
+  font-size: 0;
+}
+
+
+/* Button Styles */
+
+.button {
+  text-decoration: none;
+  border: none;
+  color: white;
+  background-color: #0076ff;
+  padding: 6px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 1px 1px 6px #555;
+  outline: none;
+  margin: 12px 2px;
+  display: inline-block;
+  font-family: 'Roboto', sans-serif;
+}
+.button:hover {
+  box-shadow: 1px 1px 3px #444;
+}
+.button:active {
+  background-color: green;
+}
+
+.button:first-child {
+  border-radius: 5px 0px 0px 5px;
+}
+.button:last-child {
+  border-radius: 0px 5px 5px 0px;
+}
+
+
+
+input[type=file] {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1; 
+}
+input[type=file]::before {
+/*   color: white;
+  opacity: 1;
+  z-index: 10;
+  display: block;
+  width: 200px;
+  height: 10px;
+  overflow: visible;
+  content: "hello"; */
+}
+label.button {
+  max-width: 120px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.file {
+  display: inline-block;
+}
+
+
+/* Simulation Style */
+
+.simulation {
+  border: 1px solid #666;
+  border-radius: 4px;
+  width: 10px;
+  padding: 1px;
+  margin: 20px 25px;
+}
+.ledlight,
+.WS2812-led {
+  display: block;
+  width: 10px;
+  height: 5px;
+  border: 0px solid #666;
+  border-radius: 2px;
+  background-color: #000;
+}
+.ledstrip {
+  display: block;
+  border: 1px solid #888;
+  background-color: #444;
+}
+.ledstrip.ring .WS2812-led {
+  position: absolute;
+}
+.ledstrip::after {
+  float: none;
+  display: block;
+  clear: both;
+}
+
+
+
+.diffuse {
+  -webkit-filter: blur(5px) brightness(200%);
+  filter: blur(5px) brightness(200%);
+}
+
+/* #output {
+  margin-top: 1em;
+} */
+
+
+

@@ -4,7 +4,7 @@
 #include "serverhandlers.h"
 
 uint8_t progress = 0;
-uint16_t myColor = CRGB::Blue;
+
 
 /*__________________________________________________________SETUP_FUNCTIONS__________________________________________________________*/
 
@@ -20,15 +20,16 @@ void splashScreen() {
 
 
 void startUpAnimate() {
-  uint8_t ledTickWidth = 3;
+  const uint8_t progressColorWidth = 3;
+  const uint16_t progressColor = CRGB::Blue; 
   
-  delay(100);
-  if (progress+ledTickWidth > NUM_LEDS) {
+  delay(50); // Slows down animation a bit
+  if (progress+progressColorWidth > NUM_LEDS) {
     progress = 0;
     FastLED.clear();
   }
-  for (uint8_t i=1; i<ledTickWidth; i++) {
-    leds[progress++] = myColor;
+  for (uint8_t i=1; i<progressColorWidth; i++) {
+    leds[progress++] = progressColor;
   }
 
   FastLED.show();
@@ -37,15 +38,15 @@ void startUpAnimate() {
 
 
 
-void startSerial() {
+void beginSerial() {
   Serial.begin(BAUD);        // Start the Serial communication to send messages to the computer
-  delay(101);
+  delay(101);                // Ensure serial has begun before proceeding
   Serial.println("\r\n");
   splashScreen();              // Serial Splash screen
 }
 
 
-void startLED() {
+void beginLED() {
 
   FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);  // GRB ordering is typical
   FastLED.setCorrection(TypicalLEDStrip);
@@ -78,7 +79,7 @@ void startLED() {
 
 
 
-void startWiFiManager() {
+void beginWiFi() {
 
     //Local intialization. Once its business is done, there is no need to keep it around
     WiFiManager wifiManager;
@@ -106,7 +107,7 @@ void startWiFiManager() {
     startUpAnimate();    
 }
 
-void startOTA() { // Start the OTA service
+void beginOTAupdates() { // Start the OTA service
   ArduinoOTA.setHostname(OTAName);
   ArduinoOTA.setPassword(OTAPassword);
 
@@ -135,7 +136,7 @@ void startOTA() { // Start the OTA service
   startUpAnimate();
 }
 
-void startSPIFFS() { // Start the SPIFFS and list all contents
+void beginSPIFFS() { // Start the SPIFFS and list all contents
   SPIFFS.begin();                             // Start the SPI Flash File System (SPIFFS)
   Serial.println("SPIFFS started. Contents:");
   {
@@ -150,14 +151,14 @@ void startSPIFFS() { // Start the SPIFFS and list all contents
   startUpAnimate();
 }
 
-void startWebSocket() { // Start a WebSocket server
+void WebSocketServer() { // Start a WebSocket server
   webSocket.begin();                          // start the websocket server
   webSocket.onEvent(webSocketEvent);          // if there's an incomming websocket message, go to function 'webSocketEvent'
   Serial.println("WebSocket server started.");
   startUpAnimate();
 }
 
-void startMDNS() { // Start the mDNS responder
+void MDNServer() { // Start the mDNS responder
   MDNS.begin(mdnsName);                        // start the multicast domain name server
   Serial.print("mDNS responder started: http://");
   Serial.print(mdnsName);
@@ -166,7 +167,7 @@ void startMDNS() { // Start the mDNS responder
   startUpAnimate();
 }
 
-void startServer() { // Start a HTTP server with a file read handler and an upload handler
+void HTTPServer() { // Start a HTTP server with a file read handler and an upload handler
   server.on("/edit.html",  HTTP_POST, []() {  // If a POST request is sent to the /edit.html address,
     server.send(200, "text/plain", ""); 
   }, handleFileUpload);                       // go to 'handleFileUpload'
