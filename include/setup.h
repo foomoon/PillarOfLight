@@ -128,7 +128,7 @@ void beginOTAupdates() { // Start the OTA service
 
 
 
-void beginSPIFFS() { // Start the SPIFFS and list all contents
+void beginFS() { // Start the SPIFFS and list all contents
   LittleFS.begin();                             // Start the SPI Flash File System (SPIFFS)
   Serial.println("LittleFS started. Contents:");
   {

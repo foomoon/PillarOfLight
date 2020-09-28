@@ -23,7 +23,7 @@ void setup() {
   
   beginOTAupdates();      // Start Over-The-Air firware Update service
   
-  beginSPIFFS();          // Start SPIFFS and list all contents
+  beginFS();              // Start LittleFs and list all contents
 
   WebSocketServer();      // Start WebSocket server
   
