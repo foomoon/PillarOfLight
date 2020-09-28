@@ -1,7 +1,8 @@
 // #include "config.h"
 #include "helperfun.h"
 #include "effects.h"
-#include "serverhandlers.h"
+#include "httpHandlers.h"
+#include "websocketHandler.h"
 
 uint8_t progress = 0;
 
@@ -46,6 +47,8 @@ void beginSerial() {
 }
 
 
+
+
 void beginLED() {
 
   FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);  // GRB ordering is typical
@@ -57,24 +60,6 @@ void beginLED() {
   startUpAnimate();
   Serial.println("LED System Enabled");
 }
-
-// void startWiFi() {
-//   WiFi.begin(WIFI_AP_NAME, WIFI_AP_PASS);             // Connect to the network
-//   Serial.print("Connecting to ");
-//   Serial.println(WIFI_AP_NAME); //Serial.println(" ...");
-
-//   // int i = 0;
-//   while (WiFi.status() != WL_CONNECTED) { // Wait for the Wi-Fi to connect
-//     Serial.print('.');
-//     startUpAnimate();
-//   }
-
-//   Serial.println('\n');
-//   Serial.println("Connection established!");  
-//   Serial.print("IP address:\t");
-//   Serial.println(WiFi.localIP());         // Send the IP address of the ESP8266 to the computer
-// }
-
 
 
 
@@ -107,9 +92,12 @@ void beginWiFi() {
     startUpAnimate();    
 }
 
+
+
+
 void beginOTAupdates() { // Start the OTA service
-  ArduinoOTA.setHostname(OTAName);
-  ArduinoOTA.setPassword(OTAPassword);
+  ArduinoOTA.setHostname(OTA_NAME);
+  ArduinoOTA.setPassword(OTA_PASS);
 
   ArduinoOTA.onStart([]() {
     Serial.println("Start");
@@ -136,11 +124,15 @@ void beginOTAupdates() { // Start the OTA service
   startUpAnimate();
 }
 
+
+
+
+
 void beginSPIFFS() { // Start the SPIFFS and list all contents
-  SPIFFS.begin();                             // Start the SPI Flash File System (SPIFFS)
-  Serial.println("SPIFFS started. Contents:");
+  LittleFS.begin();                             // Start the SPI Flash File System (SPIFFS)
+  Serial.println("LittleFS started. Contents:");
   {
-    Dir dir = SPIFFS.openDir("/");
+    Dir dir = LittleFS.openDir("/");
     while (dir.next()) {                      // List the file system contents
       String fileName = dir.fileName();
       size_t fileSize = dir.fileSize();
@@ -151,6 +143,9 @@ void beginSPIFFS() { // Start the SPIFFS and list all contents
   startUpAnimate();
 }
 
+
+
+
 void WebSocketServer() { // Start a WebSocket server
   webSocket.begin();                          // start the websocket server
   webSocket.onEvent(webSocketEvent);          // if there's an incomming websocket message, go to function 'webSocketEvent'
@@ -158,14 +153,20 @@ void WebSocketServer() { // Start a WebSocket server
   startUpAnimate();
 }
 
+
+
+
 void MDNServer() { // Start the mDNS responder
-  MDNS.begin(mdnsName);                        // start the multicast domain name server
+  MDNS.begin(MDNS_NAME);                        // start the multicast domain name server
   Serial.print("mDNS responder started: http://");
-  Serial.print(mdnsName);
+  Serial.print(MDNS_NAME);
   Serial.println(".local");
   // Serial.println(MDNS.isRunning());
   startUpAnimate();
 }
+
+
+
 
 void HTTPServer() { // Start a HTTP server with a file read handler and an upload handler
   server.on("/edit.html",  HTTP_POST, []() {  // If a POST request is sent to the /edit.html address,
@@ -177,6 +178,8 @@ void HTTPServer() { // Start a HTTP server with a file read handler and an uploa
   // }, handleUpdate);                       // go to 'handleFileUpload'
   server.on("/", HTTP_POST, handleUpdate);
 
+  //server.on("/", HTTP_GET, handleRoot);
+
   server.onNotFound(handleNotFound);          // if someone requests any other file or page, go to function 'handleNotFound'
                                               // and check if the file exists
 
@@ -185,3 +188,23 @@ void HTTPServer() { // Start a HTTP server with a file read handler and an uploa
   startUpAnimate();
 }
 
+
+
+
+
+// void startWiFi() {
+//   WiFi.begin(WIFI_AP_NAME, WIFI_AP_PASS);             // Connect to the network
+//   Serial.print("Connecting to ");
+//   Serial.println(WIFI_AP_NAME); //Serial.println(" ...");
+
+//   // int i = 0;
+//   while (WiFi.status() != WL_CONNECTED) { // Wait for the Wi-Fi to connect
+//     Serial.print('.');
+//     startUpAnimate();
+//   }
+
+//   Serial.println('\n');
+//   Serial.println("Connection established!");  
+//   Serial.print("IP address:\t");
+//   Serial.println(WiFi.localIP());         // Send the IP address of the ESP8266 to the computer
+// }

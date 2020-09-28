@@ -94,21 +94,42 @@ body {
 
 
 /* Gradient Picker Style */
-
+/* Gradient Picker Style */
 .gradient {
-  /* margin: 5px 0px 0px 0px; */
-  padding: 15px 0px;
+  padding: 15px 0px 25px 0px;
+}
+
+div.grp-wrapper {
+  background: none;
+  border: 1.5px solid #eeeeee;
+  border-radius: 3px;
+  height: 30px !important;
 }
 .grp-preview {
-  border-radius: inherit;
-  box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.5);
-  height: inherit;
+  box-sizing: border-box;
+  cursor: copy !important;
 }
-.grp-wrapper {
-  background: none;
-  border: 1px solid #999999;
-  border-radius: 6px;
-  height: 20px !important;
+div.grp-handler {
+  top: -3px !important;
+  height: 36px;
+  box-sizing: border-box;
+  border: 1.5px solid black;
+  border-radius: 5px;
+  width: 12px !important;
+  margin-left: -4px !important;
+}
+.grp-handler-drag {
+  box-sizing: border-box;
+  /* background-color: rgba(0, 0, 0, 0.3) !important; */
+  border: 1.5px solid #eeeeee;
+  border-radius: 3px;
+}
+.grp-handler-cp-wrap {
+  margin-top: 2px;
+  margin-left: -6px !important;
+}
+.grp-handler-close {
+  margin-left: -3px !important;
 }
 .grp-handler-close-c {
   visibility: hidden;
@@ -116,6 +137,14 @@ body {
 .grp-handler:hover .grp-handler-close-c {
   visibility: visible;
 }
+.grp-handler:hover .grp-handler-cp-c {
+  display: block !important;
+}
+.grp-handler-selected .grp-handler-cp-c {
+  display: none !important;
+}
+
+
 
 /* Color Picker Style */
 .colorpick {

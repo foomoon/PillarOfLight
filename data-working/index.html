@@ -1,0 +1,64 @@
+<html>
+
+  <head>
+    <title>Pillar of Light</title>
+
+    <link rel="manifest" href="/manifest.json">
+
+    <link href="pillaroflight.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/gh/artf/grapick@0.1.7/dist/grapick.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/cash-dom@8.0.0/dist/cash.min.js" type="text/javascript"></script>
+    <script type="text/javascript">jQuery = $;</script> <!-- /* Patch for jquery dependencies (ie rangeslider) */ -->
+
+
+    <!-- LED Strip and effects -->
+    <script src="https://cdn.jsdelivr.net/gh/foomoon/LEDStrip/ledstrip.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/foomoon/LEDStrip/ws2812.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/foomoon/LEDStrip/fire.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/foomoon/LEDStrip/larson.min.js" type="text/javascript"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/rangeslider.js@2.3.3/dist/rangeslider.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/artf/grapick@0.1.7/dist/grapick.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/bgrins/TinyColor@1.4.1/dist/tinycolor-min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/6.12.4/ajv.min.js" type="text/javascript"></script>
+
+    <script src="WebSocket.js" type="text/javascript"></script>
+    <script src="pillaroflight.js" type="text/javascript"></script>
+
+
+  </head>
+
+  <body>
+    
+    <div class="app">
+      <header>
+        <h1>Pillar of Light</h1>
+      </header>
+      <nav>
+        <div class="simulation"></div>
+      </nav>
+      <main>
+        <div class="effects">
+          <div class="effectSelector"></div>
+          <div class="controls"></div>
+        </div>
+      </main>
+      <footer>
+        <div class="center">
+          <a class="button" href="#">Live</a>
+          <a class="button" href="#" onclick="saveData()">Save</a>
+        </div>
+      </footer>
+    </div> <!-- .app -->
+
+  </body>
+
+
+</html>
+

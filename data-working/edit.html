@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title>Upload Files</title>
+
+    <link rel="manifest" href="/manifest.json">
+
+    <link href="pillaroflight.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  </head>
+
+  <body>
+      <div class="app">
+      <header>
+        <h1>File Uploader</h1>
+      </header>
+      <main>
+        <div style="text-align:center">
+          <p>Use this page to upload new files to the ESP8266.<br />You can use compressed (deflated) files (files with a .gz extension) to save space and bandwidth.</p>
+        </div>
+      </main>
+      <footer>
+        <form class="center" method="post" enctype="multipart/form-data">
+          <label class="button" for="file">
+            <i class="material-icons md-18">backup</i>
+            <span>Choose File</span>
+          </label>
+          <input id="file" class="inputfile" type="file" name="Choose file" accept=".gz,.html,.ico,.js,.css,.json,.png" data-multiple-caption="{count} Files" multiple>
+          <input class="button" type="submit" value="Upload" name="submit">
+        </form>
+      </footer>
+    </div>
+  </body>
+</html>
+

@@ -145,7 +145,34 @@ var defaultData = {
 }
 
 
+/// Initiate PillarOfLight App
+document.addEventListener("DOMContentLoaded", () => {
 
+  let ajv = new Ajv({
+    allErrors: true
+  });
+
+  const savedEffectsURL = "https://cdn.jsdelivr.net/gh/foomoon/PillarOfLight@latest/data/saved_effects.json"
+  const jsonSchemaURL = "https://cdn.jsdelivr.net/gh/foomoon/PillarOfLight@master/data/schema.json"
+
+  fetchValidJSON(ajv, savedEffectsURL, jsonSchemaURL)
+    .then(json => {
+      return json
+    })
+    .catch(error => {
+      defaultData.error = error
+      return defaultData
+    })
+    .then(result => {
+      if (result.error) {
+        console.warn(result.error + " - Using Default Data")
+      }
+      let pillar = new PillarOfLight(result)
+      pillar.setValidator(ajv)
+      pillar.show()
+      styleFileInput()
+    })
+})
 
 
 
@@ -469,7 +496,9 @@ PillarOfLight.prototype.setEffect = function() {
   this.setOpts()
   this.driver.init()
   this.driver.animate()
-  this.driver.update(this.data[this.effect].data, this.opts)
+  //this.driver.update(this.data[this.effect].data, this.opts)
+
+  this.updateAll()
 }
 
 
